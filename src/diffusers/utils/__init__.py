@@ -1,7 +1,3 @@
-# flake8: noqa
-# There's no way to ignore "F401 '...' imported but unused" warnings in this
-# module, but to preserve other warnings. So, don't check this module at all.
-
 # Copyright 2022 The HuggingFace Inc. team. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +25,7 @@ from .import_utils import (
     is_flax_available,
     is_inflect_available,
     is_modelcards_available,
+    is_onnx_available,
     is_scipy_available,
     is_tf_available,
     is_torch_available,
@@ -37,6 +34,7 @@ from .import_utils import (
     requires_backends,
 )
 from .logging import get_logger
+from .outputs import BaseOutput
 
 
 logger = get_logger(__name__)

@@ -1,13 +1,18 @@
-# flake8: noqa
-# There's no way to ignore "F401 '...' imported but unused" warnings in this
-# module, but to preserve other warnings. So, don't check this module at all.
-from .utils import is_inflect_available, is_scipy_available, is_transformers_available, is_unidecode_available
+from .utils import (
+    is_inflect_available,
+    is_onnx_available,
+    is_scipy_available,
+    is_transformers_available,
+    is_unidecode_available,
+)
 
 
-__version__ = "0.2.4"
+__version__ = "0.4.0.dev0"
 
+from .configuration_utils import ConfigMixin
 from .modeling_utils import ModelMixin
 from .models import AutoencoderKL, UNet2DConditionModel, UNet2DModel, VQModel
+from .onnx_utils import OnnxRuntimeModel
 from .optimization import (
     get_constant_schedule,
     get_constant_schedule_with_warmup,
@@ -27,17 +32,29 @@ from .schedulers import (
     SchedulerMixin,
     ScoreSdeVeScheduler,
 )
+from .utils import logging
 
 
 if is_scipy_available():
     from .schedulers import LMSDiscreteScheduler
 else:
-    from .utils.dummy_scipy_objects import *
+    from .utils.dummy_scipy_objects import *  # noqa F403
 
 from .training_utils import EMAModel
 
 
 if is_transformers_available():
-    from .pipelines import LDMTextToImagePipeline, StableDiffusionPipeline
+    from .pipelines import (
+        LDMTextToImagePipeline,
+        StableDiffusionImg2ImgPipeline,
+        StableDiffusionInpaintPipeline,
+        StableDiffusionPipeline,
+    )
 else:
-    from .utils.dummy_transformers_objects import *
+    from .utils.dummy_transformers_objects import *  # noqa F403
+
+
+if is_transformers_available() and is_onnx_available():
+    from .pipelines import StableDiffusionOnnxPipeline
+else:
+    from .utils.dummy_transformers_and_onnx_objects import *  # noqa F403

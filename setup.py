@@ -78,21 +78,25 @@ from setuptools import find_packages, setup
 _deps = [
     "Pillow",
     "accelerate>=0.11.0",
-    "black==22.3",
+    "black==22.8",
     "datasets",
     "filelock",
     "flake8>=3.8.3",
     "hf-doc-builder>=0.3.0",
-    "huggingface-hub>=0.8.1,<1.0",
+    "huggingface-hub>=0.8.1",
     "importlib_metadata",
     "isort>=5.5.4",
     "modelcards==0.1.4",
     "numpy",
     "pytest",
+    "pytest-timeout",
+    "pytest-xdist",
+    "scipy",
     "regex!=2019.12.17",
     "requests",
     "tensorboard",
     "torch>=1.4",
+    "transformers>=4.21.0",
 ]
 
 # this is a lookup table with items like:
@@ -163,10 +167,10 @@ extras = {}
 
 
 extras = {}
-extras["quality"] = ["black==22.3", "isort >= 5.5.4", "flake8 >= 3.8.3"]
+extras["quality"] = ["black==22.8", "isort>=5.5.4", "flake8>=3.8.3", "hf-doc-builder"]
 extras["docs"] = ["hf-doc-builder"]
 extras["training"] = ["accelerate", "datasets", "tensorboard", "modelcards"]
-extras["test"] = ["pytest"]
+extras["test"] = ["datasets", "onnxruntime", "pytest", "pytest-timeout", "pytest-xdist", "scipy", "transformers"]
 extras["dev"] = extras["quality"] + extras["test"] + extras["training"] + extras["docs"]
 
 install_requires = [
@@ -182,7 +186,7 @@ install_requires = [
 
 setup(
     name="diffusers",
-    version="0.2.4",
+    version="0.4.0.dev0", # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
     description="Diffusers",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
@@ -197,6 +201,7 @@ setup(
     python_requires=">=3.6.0",
     install_requires=install_requires,
     extras_require=extras,
+    entry_points={"console_scripts": ["diffusers-cli=diffusers.commands.diffusers_cli:main"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -205,7 +210,6 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
